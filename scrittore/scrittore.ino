@@ -7,7 +7,9 @@
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key keyA;
 
-char pswd[9] = {"1234"};
+bool authenticateWithKey(byte keyType, MFRC522::MIFARE_Key *key);
+bool writeBlock(byte *data);
+String leggiSerial();
 
 void setup() {
   Serial.begin(9600);
@@ -30,7 +32,7 @@ void loop() {
     return;
   }
 
-  if (writeTagContent(pswd)) {
+  if (writeTagContent(leggiSerial())) {
     Serial.println("pswd scritta con successo!");
   } else {
     Serial.println("Errore durante la scrittura della pswd.");
@@ -66,7 +68,7 @@ bool authenticateWithKey(byte keyType, MFRC522::MIFARE_Key *key) {
   if (status == MFRC522::STATUS_OK) {
     return true;
   } else {
-    Serial.print("Errore di autenticazione");
+    Serial.print("Errore di autenticazione: ");
     Serial.println(mfrc522.GetStatusCodeName(status));
     return false;
   }
@@ -84,4 +86,14 @@ bool writeBlock(byte *data) {
     Serial.println(mfrc522.GetStatusCodeName(status));
     return false;
   }
+}
+
+String leggiSerial() {
+  String password = "";
+  while (password.length() == 0) {
+    if (Serial.available() > 0) {
+      password = Serial.readString();
+    }
+  }
+  return password;
 }
