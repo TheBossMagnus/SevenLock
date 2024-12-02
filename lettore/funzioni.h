@@ -19,8 +19,7 @@ String leggiTag() {
   byte buffer[18];
   byte size = sizeof(buffer);
 
-  if (autenticaTagNfc
-  (MFRC522::PICC_CMD_MF_AUTH_KEY_A, &key)) {
+  if (autenticaTagNfc(MFRC522::PICC_CMD_MF_AUTH_KEY_A, &key)) {
     if (mfrc522.MIFARE_Read(blockNumber, buffer, &size) == MFRC522::STATUS_OK) {
       String content = "";
       for (byte i = 0; i < size; i++) {
@@ -36,12 +35,16 @@ String leggiTag() {
   return "";
 }
 
+void initKey() {
+  for (byte i = 0; i < 6; i++) {
+    key.keyByte[i] = 0xFF;  // Chiave di default per Key A
+  }
+}
 
-//Autrenticazione al tag nfc
-bool autenticaTagNfc
-(byte keyType, MFRC522::MIFARE_Key *key) {
-  MFRC522::StatusCode status = mfrc522.PCD_Authenticate( keyType, blockNumber, key, &(mfrc522.uid));
-
+//Autenticazione al tag nfc
+bool autenticaTagNfc(byte keyType, MFRC522::MIFARE_Key *key) {
+  MFRC522::StatusCode status = mfrc522.PCD_Authenticate(keyType, blockNumber, key, &(mfrc522.uid));
+  
   if (status == MFRC522::STATUS_OK) {
     return true;
   } else {

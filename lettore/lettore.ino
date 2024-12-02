@@ -18,7 +18,7 @@ void setup() {
   SPI.begin();
   posizioneCorrente = apri_chiudi(posizioneCorrente);
   mfrc522.PCD_Init();
-
+  initKey();
   lcd.init();
   lcd.backlight();
   lcd.clear();
