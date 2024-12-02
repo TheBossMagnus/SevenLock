@@ -25,6 +25,7 @@ void setup() {
   lcd.print("Avvicina tag nfc");
 }
 
+
 void loop() {
   lcd.clear();
   lcd.print("Avvicina tag nfc");
