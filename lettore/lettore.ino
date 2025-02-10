@@ -29,6 +29,7 @@ void setup() {
 void loop() {
   lcd.clear();
   lcd.print("Avvicina tag nfc");
+  aggiornaPassword();
 
   // Verifica se c'è un nuovo tag presente
   if (mfrc522.PICC_IsNewCardPresent() && mfrc522.PICC_ReadCardSerial()) {

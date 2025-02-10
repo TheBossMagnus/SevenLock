@@ -1,18 +1,31 @@
 // Pin nfc
 #define SS_PIN 10
 #define RST_PIN 9
-#define NUMERO_PASSWORD 1
+#define NUMERO_PASSWORD 99
 
 const byte blockNumber = 8;
 MFRC522 mfrc522(SS_PIN, RST_PIN);
 MFRC522::MIFARE_Key key;
-char elencoPasswordValide[NUMERO_PASSWORD][9] = { "1234" };
+char elencoPasswordValide[NUMERO_PASSWORD][17] = { "1234" };
 
 String leggiTag();
 bool autenticaTagNfc(byte keyType, MFRC522::MIFARE_Key *key);
 int apri_chiudi(int pos);
 bool pswdValida(const char passwordInput[]);
 Servo servo;
+
+
+void aggiornaPassword() {
+  static int indexPswd = 0;
+  while (Serial.available() > 0) {
+    String line = Serial.readStringUntil('\n');
+    line.trim();
+    if (line.length() > 0 && indexPswd < NUMERO_PASSWORD) {
+      line.toCharArray(elencoPasswordValide[indexPswd], 17);
+      indexPswd++;
+    }
+  }
+}
 
 // legggi il contnuto del tag nfc
 String leggiTag() {
